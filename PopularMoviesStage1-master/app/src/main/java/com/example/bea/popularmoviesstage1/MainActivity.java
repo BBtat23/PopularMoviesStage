@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         mRecyclerView.setLayoutManager(layoutManager);
         mAdapter = new MovieAdapter(this,movies,this);
         mRecyclerView.setAdapter(mAdapter);
+        new MovieAsyncTask().execute("popular");
     }
 
     @Override
