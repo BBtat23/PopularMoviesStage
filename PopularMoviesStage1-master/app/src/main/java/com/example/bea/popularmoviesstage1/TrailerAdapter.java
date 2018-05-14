@@ -3,6 +3,7 @@ package com.example.bea.popularmoviesstage1;
 import android.app.Activity;
 import android.content.Context;
 import android.media.Image;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -12,19 +13,20 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import com.example.bea.popularmoviesstage1.data.Movie;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class TrailerAdapter extends ArrayAdapter<Movie>{
+public class TrailerAdapter<String> extends ArrayAdapter<String>{
 
-    ArrayList<Movie> movies;
+    private String[] urls;
     Context context;
     int resource;
-    public TrailerAdapter(@NonNull Context context, int resource, ArrayList<Movie> movies) {
-        super(context, resource, movies);
-        this.movies = movies;
+    public TrailerAdapter(@NonNull Context context, int resource, String[] urls) {
+        super(context, resource, urls);
+        this.urls = urls;
         this.context = context;
         this.resource = resource;
     }
@@ -37,8 +39,9 @@ public class TrailerAdapter extends ArrayAdapter<Movie>{
             LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.list_trailer_layout,null,true);
         }
-        Movie movie = getItem(position);
+
         ImageView imageView = (ImageView) convertView.findViewById(R.id.imageViewTrailer);
-        return super.getView(position, convertView, parent);
+        Picasso.with(getContext()).load((java.lang.String) urls[position]).into(imageView);
+        return imageView;
     }
 }
