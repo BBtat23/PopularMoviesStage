@@ -97,19 +97,19 @@ public class MovieDetailActivity extends AppCompatActivity {
         String[] listVideos = new String[movieKeyStringList.size()];
         for (int i = 0; i < movieKeyStringList.size(); i++) {
             movieKeyString = movieKeyStringList.get(i);
-            listVideos[i] = movieKeyString;
+            listVideos[i] = "http://img.youtube.com/vi/" + movieKeyString + "/0.jpg";
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(MovieDetailActivity.this, android.R.layout.simple_list_item_1, listVideos);
         listViewVideoMovie = (ListView) findViewById(R.id.trailer_list_view);
-        listViewVideoMovie.setAdapter(adapter);
+        listViewVideoMovie.setAdapter(new TrailerAdapter<>(MovieDetailActivity.this,0,listVideos));
 
         listViewVideoMovie.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //Here I take the text from the listView depending on the position
                 String videoString = (String)adapterView.getItemAtPosition(i);
+                String videoMovieString = videoString.substring(26,37);
                 //I make an intent to launch youtube app and make the url
-                Intent youtubeIntent = new Intent(Intent.ACTION_VIEW,Uri.parse("https://www.youtube.com/watch?v=" + videoString));
+                Intent youtubeIntent = new Intent(Intent.ACTION_VIEW,Uri.parse("https://www.youtube.com/watch?v=" + videoMovieString));
                 //Launch the intent
                 startActivity(youtubeIntent);
             }
