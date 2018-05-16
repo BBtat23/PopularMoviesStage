@@ -7,6 +7,7 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -121,15 +122,18 @@ public class MovieProvider extends ContentProvider{
         SQLiteDatabase database = movieDbHelper.getWritableDatabase();
 
         final int match = sUriMatcher.match(uri);
-        Uri newUri;
+        Uri newUri = null;
+        long id = 0;
         switch (match) {
             case FAVOURITES:
-               long id = database.insert(MovieContract.MovieEntry.TABLE_NAME, null, contentValues);
-               if (id > 0){
-                   newUri = ContentUris.withAppendedId(MovieContract.MovieEntry.CONTENT_URI, id);
-                }else{
-                throw new android.database.SQLException("Failed to insert row into " + uri);
+                try {
+                    id = database.insert(MovieContract.MovieEntry.TABLE_NAME, null, contentValues);
+                }catch (SQLiteConstraintException e){
+                    e.printStackTrace();
                 }
+               if (id > 0) {
+                   newUri = ContentUris.withAppendedId(MovieContract.MovieEntry.CONTENT_URI, id);
+               }
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
