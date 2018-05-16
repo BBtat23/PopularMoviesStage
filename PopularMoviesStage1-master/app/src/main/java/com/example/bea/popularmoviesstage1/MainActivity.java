@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
     private List<Movie> movies = new ArrayList<>();
     private MovieAdapter mAdapter;
     private RecyclerView mRecyclerView;
-    private int sortCriteria;
+    private String sortCriteria;
     private final String SORTCRITERIA = "sortCriteria";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +42,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState != null){
-            savedInstanceState.getInt(SORTCRITERIA);
+          sortCriteria =  savedInstanceState.getString(SORTCRITERIA);
+            new MovieAsyncTask().execute(sortCriteria);
+        }else {
+            new MovieAsyncTask().execute("popular");
         }
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_id);
@@ -50,11 +53,12 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         mRecyclerView.setLayoutManager(layoutManager);
         mAdapter = new MovieAdapter(this,movies,this);
         mRecyclerView.setAdapter(mAdapter);
+
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(SORTCRITERIA, sortCriteria);
+        outState.putString(SORTCRITERIA, sortCriteria);
         super.onSaveInstanceState(outState);
     }
 
@@ -180,11 +184,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         int itemId = item.getItemId();
         if (itemId == R.id.popular) {
             new MovieAsyncTask().execute("popular");
-            sortCriteria = 1;
+            sortCriteria = "popular";
 
         } else if (itemId == R.id.topRated) {
             new MovieAsyncTask().execute("top_rated");
-            sortCriteria = 2;
+            sortCriteria = "top_rated";
 
         }else if (itemId == R.id.favourites){
             queryFavourite();
