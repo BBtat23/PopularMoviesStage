@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
     private List<Movie> movies = new ArrayList<>();
     private MovieAdapter mAdapter;
     private RecyclerView mRecyclerView;
-    private String sortCriteria;
+    private String sortCriteria = "popular";
     private final String SORTCRITERIA = "sortCriteria";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +42,18 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState != null){
-          sortCriteria =  savedInstanceState.getString(SORTCRITERIA);
-            new MovieAsyncTask().execute(sortCriteria);
+            sortCriteria =  savedInstanceState.getString(SORTCRITERIA);
+            switch (sortCriteria){
+                case "popular":
+                    new MovieAsyncTask().execute("popular");
+                break;
+                case "top_rated":
+                    new MovieAsyncTask().execute("top_rated");
+                break;
+                case "favourites":
+                    queryFavourite();
+                break;
+            }
         }else {
             new MovieAsyncTask().execute("popular");
         }
@@ -192,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
 
         }else if (itemId == R.id.favourites){
             queryFavourite();
-
+            sortCriteria = "favourites";
         }
         return super.onOptionsItemSelected(item);
     }
