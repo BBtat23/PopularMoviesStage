@@ -41,29 +41,29 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (savedInstanceState != null){
-            sortCriteria =  savedInstanceState.getString(SORTCRITERIA);
-            switch (sortCriteria){
-                case "popular":
-                    new MovieAsyncTask().execute("popular");
-                break;
-                case "top_rated":
-                    new MovieAsyncTask().execute("top_rated");
-                break;
-                case "favourites":
-                    queryFavourite();
-                break;
-            }
-        }else {
-            new MovieAsyncTask().execute("popular");
-        }
-
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_id);
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
         mRecyclerView.setLayoutManager(layoutManager);
         mAdapter = new MovieAdapter(this,movies,this);
         mRecyclerView.setAdapter(mAdapter);
 
+        //We put this after the adapter instance, because if it is before in queryFavourites method we have the error that adapter is null
+        if (savedInstanceState != null){
+            sortCriteria =  savedInstanceState.getString(SORTCRITERIA);
+            switch (sortCriteria){
+                case "popular":
+                    new MovieAsyncTask().execute("popular");
+                    break;
+                case "top_rated":
+                    new MovieAsyncTask().execute("top_rated");
+                    break;
+                case "favourites":
+                    queryFavourite();
+                    break;
+            }
+        }else {
+            new MovieAsyncTask().execute("popular");
+        }
     }
 
     @Override
